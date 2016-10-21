@@ -1,0 +1,31 @@
+{	
+	"basepath" : "",
+	"dist" : {
+		"js" : [
+		],
+		"css" : [
+		]
+	},
+	"js" : [
+		"modules/**/*.js"
+	],
+	"css" : [
+		"style.css"
+	],
+	"sass" : [
+		"sass/style.scss"
+	],
+	"html" : [
+		"modules/**/*.html"
+	],
+	"json" : [
+		"modules/**/*.json",
+		"languages/*.json"
+	],
+	"images" : [
+		"images/**/*.png",
+		"images/**/*.jpg",
+		"images/**/*.jpeg",
+		"images/**/*.gif"
+	]
+}
