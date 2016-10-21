@@ -40,7 +40,7 @@ PATH_DEPLOIEMENT = 'gulp/deploiement/';
 //CLEAN : clean the folder deploiement
 gulp.task('clean', function () {
     return gulp.src(PATH_DEPLOIEMENT, {read: false})
-            .pipe(clean());
+               .pipe(clean());
 });
 
 //CSS,  Run sass to create the file ./deploiement/style.min.css and minify css from sources.json
@@ -177,7 +177,7 @@ gulp.task('deploy', function () {
           return gulp.src(PATH_DEPLOIEMENT + '**/*')
                      .pipe(gulpif((argv.production || (argv.env && argv.env == 'production')),
                            prompt.confirm({
-                                message: 'Etes-vous sûr de vouloir publier en production ?',
+                                message: 'Are you sure to push in production ?',
                                 default: false
                           })
                      ))
