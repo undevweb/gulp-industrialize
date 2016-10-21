@@ -10,3 +10,14 @@ Go in gulp and rename config.dist in config. Go inside config and customize your
    - project.json //title, description, appName of your website
    - sources.json //paths of the sources must go in production
    - deploy.json //credentials of your ftp
+
+## Run
+
+```sh
+$ gulp prepare-deploiement
+```
+
+```sh
+$ gulp deploy --env xxx
+```
+Replace xxx by what you write in deploy.json
