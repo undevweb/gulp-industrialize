@@ -1,0 +1,6 @@
+{
+  "name": "Gulp-industrialize",
+  "tagline": "",
+  "body": "# gulp-industrialize\r\n\r\nWith gulp-industrialize you can easily deploy your project to the production. Run gulp prepare-deploiement will minify all your project in the folder gulp/deploiement. Then you have just to run  gulp deploy --env production to deploy the minified sources in production.\r\n\r\n## Configuration\r\n\r\nDonwload this project and copy it to the root of your project. npm install the dependencies from the package.json.\r\nGo in gulp and rename config.dist in config. Go inside config and customize your environment : \r\n\r\n   - project.json //title, description, appName of your website\r\n   - sources.json //paths of the sources must go in production\r\n   - deploy.json //credentials of your ftp\r\n\r\n## Run\r\n\r\n```sh\r\n$ gulp prepare-deploiement\r\n```\r\n\r\n```sh\r\n$ gulp deploy --env xxx\r\n```\r\nReplace xxx by what you write in deploy.json",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
