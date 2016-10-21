@@ -83,7 +83,7 @@ gulp.task('js-minify',['clean'], function (callback) {
                 .pipe(ngAnnotate())
                 .pipe(uglify())
                 .pipe(rename({suffix: '.min'}))
-                 .pipe(gulp.dest(PATH_DEPLOIEMENT ));
+                .pipe(gulp.dest(PATH_DEPLOIEMENT ));
      
 });
 
