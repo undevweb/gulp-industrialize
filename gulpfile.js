@@ -18,6 +18,7 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     htmlmin = require('gulp-htmlmin'),
 	removeHtmlComments = require('gulp-remove-html-comments'),
+	cleanCSS = require('gulp-clean-css');
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
     jsonminify = require('gulp-jsonminify'),
@@ -36,13 +37,13 @@ PATH_DEPLOIEMENT = 'gulp/deploiement/';
 // Micro tasks for prepare-deploiement
 /////////////////////////////
 
-//Etape 1 : vide entièrement le dossier deploiement
+//CLEAN : clean the folder deploiement
 gulp.task('clean', function () {
     return gulp.src(PATH_DEPLOIEMENT, {read: false})
             .pipe(clean());
 });
 
-//Etape 2 : lancer la commande sass qui crée le fichier ./deploiement/style.min.css
+//CSS,  Run sass to create the file ./deploiement/style.min.css and minify css from sources.json
 gulp.task('css-sass',['clean'], function () {
     return gulp.src(oSources.sass,{base: '.'})
             .pipe(sourcemaps.init())
@@ -53,15 +54,20 @@ gulp.task('css-sass',['clean'], function () {
             .pipe(gulp.dest(PATH_DEPLOIEMENT));
 });
 
+gulp.task('css-minify',['clean'], function() {
+  return gulp.src(oSources.css)
+    .pipe(cleanCSS({compatibility: 'ie8'}))
+    .pipe(gulp.dest(PATH_DEPLOIEMENT));
+});
 
-//Etape 3 : minifier les json grâce à ./config/sources.json et les mettre dans ./deploiement au même endroit (modules/nommodule/data..)
+//JSON : minify json from ./config/sources.json and put the result in ./deploiement with the same tree (modules/nommodule/data..)
 gulp.task('json-minify',['clean'], function () {
     return gulp.src(oSources.json, {base: '.'})
             .pipe(jsonminify())
             .pipe(gulp.dest(PATH_DEPLOIEMENT));
 });
 
-//Etape 4 : minifier les html grâce à ./config/sources.json et les mettre dans ./deploiement au même endroit 
+//HTML : minify html files from ./config/sources.json and put the result in ./deploiement  with the same tree
 gulp.task('html-minify',['clean'], function () {
     return gulp.src(oSources.html,{base: '.'})
 			.pipe(removeHtmlComments())
@@ -69,7 +75,7 @@ gulp.task('html-minify',['clean'], function () {
             .pipe(gulp.dest(PATH_DEPLOIEMENT));
 });
 
-//Etape 5 : minifier et concaténer les js locaux (config + modules) grâce à ./config/sources.json et créer le fichier ./deploiement/script.min.js
+//JS : minify and concat JS from ./config/sources.json and create the file ./deploiement/script.min.js
 gulp.task('js-minify',['clean'], function (callback) {
 	
 	
@@ -83,7 +89,7 @@ gulp.task('js-minify',['clean'], function (callback) {
 	
 });
 
-//Etape 6 : copier les images définies dans config/sources.json dans deploiement/images
+//PICTURES : copy pictures from config/sources.json in deploiement
 gulp.task('images', function () {
     gulp.src(oSources.images).pipe(imageop({
         optimizationLevel: 5,
@@ -99,7 +105,7 @@ gulp.task('images', function () {
             });
 });
 
-//Etape 7 : Copier le index.html et injecter l'inclusion du css local, des js externes, des js locaux dans deploiement/index.html
+//COPY-INDEX : Create the deploiement/index.html and inject dependances of local css, js and external librairies
 gulp.task('copy-index',['clean'], function () {
     gulp.src(PATH_INDEX)
             .pipe(rename({basename: 'index', extname: ".html"}))
@@ -149,7 +155,7 @@ gulp.task('default',function(){
 	
 });
 
-gulp.task('prepare-deploiement',['css-sass','json-minify','html-minify','inject']);
+gulp.task('prepare-deploiement',['css-sass','css-minify','json-minify','html-minify','inject']);
 
 gulp.task('deploy', function () {
 

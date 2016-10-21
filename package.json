@@ -10,6 +10,7 @@
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.0",
+	"gulp-clean-css": "^2.0.13",
     "gulp-htmlmin": "^3.0.0",
     "gulp-if": "^2.0.1",
     "gulp-image-optimization": "^0.1.3",
