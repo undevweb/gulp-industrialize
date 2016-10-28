@@ -5,12 +5,13 @@
   "main": "gulpfile.js",
   "dependencies": {},
   "devDependencies": {
+    "@aquafadas/gulp-php-minify": "^0.3.1",
     "extend": "^3.0.0",
     "fs": "0.0.1-security",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
+    "gulp-clean-css": "^2.0.13",
     "gulp-concat": "^2.6.0",
-	"gulp-clean-css": "^2.0.13",
     "gulp-htmlmin": "^3.0.0",
     "gulp-if": "^2.0.1",
     "gulp-image-optimization": "^0.1.3",
@@ -30,6 +31,7 @@
     "install": "^0.8.1",
     "jshint": "^2.9.4",
     "minimist": "^1.2.0",
+    "node-sass": "^3.10.1",
     "npm": "^3.10.9"
   },
   "scripts": {

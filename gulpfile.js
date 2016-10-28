@@ -23,6 +23,7 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     jsonminify = require('gulp-jsonminify'),
     imageop = require('gulp-image-optimization'),
+    phpMinify = require('@aquafadas/gulp-php-minify'),
     rsync = require('gulp-rsync');
 
 
@@ -103,6 +104,15 @@ gulp.task('images', function () {
         });
 });
 
+//PHP : minify php
+gulp.task('php-minify',['clean'], function(){
+     gulp.src(oSources.php.src, {read: false})
+         .pipe(phpMinify({silent: true,binary: oSources.php.exe}))
+         .pipe(gulp.dest(PATH_DEPLOIEMENT));
+});
+
+
+
 //COPY-INDEX : Create the deploiement/index.html and inject dependances of local css, js and external librairies
 gulp.task('copy-index',['clean'], function () {
     gulp.src(PATH_INDEX)
@@ -110,6 +120,7 @@ gulp.task('copy-index',['clean'], function () {
         .pipe(gulp.dest(PATH_DEPLOIEMENT));
 
 });
+
 
 gulp.task('inject', ['copy-index','css-sass','js-minify'], function () {
      
@@ -153,7 +164,7 @@ gulp.task('default',function(){
      
 });
 
-gulp.task('prepare-deploiement',['css-sass','css-minify','json-minify','html-minify','inject']);
+gulp.task('prepare-deploiement',['css-sass','css-minify','json-minify','html-minify','php-minify','inject']);
 
 gulp.task('deploy', function () {
 

@@ -27,5 +27,12 @@
 		"images/**/*.jpg",
 		"images/**/*.jpeg",
 		"images/**/*.gif"
-	]
+	],
+        "php" : {
+		"exe" : "path\\to\\php.exe",
+		"src" : [
+                    
+		]
+        
+        }
 }
