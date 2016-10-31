@@ -10,7 +10,7 @@
         ]
     },
     "js":{  
-        "active":true,
+        "active":false,
         "src":[  
             "/js/**/*.js"
         ],
@@ -23,7 +23,7 @@
         ]
     },
     "sass":{  
-        "active":true,
+        "active":false,
         "src": "/sass/style.scss",
         "dist" : "style.min.css"
     },
