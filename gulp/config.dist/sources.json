@@ -1,38 +1,59 @@
-{	
-	"basepath" : "",
-	"dist" : {
-		"js" : [
-		],
-		"css" : [
-		]
-	},
-	"js" : [
-		"modules/**/*.js"
-	],
-	"css" : [
-		"style.css"
-	],
-	"sass" : [
-		"sass/style.scss"
-	],
-	"html" : [
-		"modules/**/*.html"
-	],
-	"json" : [
-		"modules/**/*.json",
-		"languages/*.json"
-	],
-	"images" : [
-		"images/**/*.png",
-		"images/**/*.jpg",
-		"images/**/*.jpeg",
-		"images/**/*.gif"
-	],
-        "php" : {
-		"exe" : "path\\to\\php.exe",
-		"src" : [
-                    
-		]
-        
-        }
+{  
+    "basepath":".",
+    "cwd" : "path\\to\\your\\app",
+    "dist":{  
+        "js":[  
+
+        ],
+        "css":[  
+
+        ]
+    },
+    "js":{  
+        "active":true,
+        "src":[  
+            "/js/**/*.js"
+        ],
+        "dist" : "script.js"
+    },
+    "css":{  
+        "active":false,
+        "src":[  
+            "/css/**/*.css"
+        ]
+    },
+    "sass":{  
+        "active":true,
+        "src": "/sass/style.scss",
+        "dist" : "style.min.css"
+    },
+    "html":{  
+        "active":false,
+        "src":[  
+            "/**/*.html"
+        ]
+    },
+    "json":{  
+        "active":false,
+        "src":[  
+            "/**/*.json",
+            "languages/*.json"
+        ]
+    },
+    "images":{  
+        "active":false,
+        "src":[  
+            "/images/**/*.png",
+            "/images/**/*.jpg",
+            "/images/**/*.jpeg",
+            "/images/**/*.gif"
+        ]
+    },
+    "php":{  
+        "active":false,
+        "exe":"path\\to\\php.exe",
+        "src":[  
+
+        ]
+    }
 }
