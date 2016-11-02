@@ -1,59 +1,66 @@
-{  
-    "basepath":".",
-    "cwd" : "path\\to\\your\\app",
-    "dist":{  
-        "js":[  
-
+{
+    "basepath": "path/to/your/app",
+    "cwd": "path/to/your/app",
+    "deploiement": "path/to/deploiement",
+    "dist": {
+        "js": [
         ],
-        "css":[  
-
+        "css": [
         ]
     },
-    "js":{  
-        "active":false,
-        "src":[  
-            "/js/**/*.js"
+    "index": {
+        "active": false
+    },
+    "copy": {
+        "active": false,
+        "src": [
+        ]
+    },
+    "js": {
+        "active": false,
+        "src": [
+            "js/**/*.js"
         ],
-        "dist" : "script.js"
+        "dist": "script.js"
     },
-    "css":{  
-        "active":false,
-        "src":[  
-            "/css/**/*.css"
+    "css": {
+        "active": false,
+        "src": [
+            "style.css"
         ]
     },
-    "sass":{  
-        "active":false,
-        "src": "/sass/style.scss",
-        "dist" : "style.min.css"
+    "sass": {
+        "active": false,
+        "src": "/css/scss/style.scss",
+        "dist": "style.min.css"
     },
-    "html":{  
-        "active":false,
-        "src":[  
-            "/**/*.html"
+    "html": {
+        "active": false,
+        "src": [
+            "**/*.html"
         ]
     },
-    "json":{  
-        "active":false,
-        "src":[  
-            "/**/*.json",
-            "languages/*.json"
+    "json": {
+        "active": false,
+        "src": [
+            "**/*.json"
         ]
     },
-    "images":{  
-        "active":false,
-        "src":[  
-            "/images/**/*.png",
-            "/images/**/*.jpg",
-            "/images/**/*.jpeg",
-            "/images/**/*.gif"
-        ]
+    "images": {
+        "active": false,
+        "src": [
+            "**/*.png",
+            "**/*.jpg",
+            "**/*.jpeg",
+            "**/*.gif"
+        ],
+        "dist" : "/public"
     },
-    "php":{  
-        "active":false,
-        "exe":"path\\to\\php.exe",
-        "src":[  
-
+    "php": {
+        "active": false,
+        "exe": "path/to/your/php.exe",
+        "src": [
+            "**/*.php"
         ]
     }
 }

@@ -22,15 +22,15 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
     jsonminify = require('gulp-jsonminify'),
-    imageop = require('gulp-image-optimization'),
+    imagemin = require('gulp-imagemin')
     phpMinify = require('@aquafadas/gulp-php-minify'),
     rsync = require('gulp-rsync');
 
 
-oSources = require('./gulp/config/sources.json');
-oDeploy = require('./gulp/config/deploy.json');
-oProject = require('./gulp/config/project.json');
-PATH_INDEX = 'gulp/src/index.html.dist';
+oSources = require('./config/sources.json');
+oDeploy = require('./config/deploy.json');
+oProject = require('./config/project.json');
+PATH_INDEX = './src/index.html.dist';
 PATH_DEPLOIEMENT = oSources.deploiement || 'gulp/deploiement/';
 
 
@@ -114,17 +114,14 @@ gulp.task('js-minify', ['clean'], function () {
 //PICTURES : copy pictures from config/sources.json in deploiement
 gulp.task('images', function () {
     if (oSources.images.active) {
-        gulp.src(oSources.images.src, {cwd: oSources.cwd}).pipe(imageop({
-            optimizationLevel: 5,
-            progressive: true,
-            interlaced: true
-        }))
-            .pipe(gulp.dest(sIMAGESDestination))
+        gulp.src(oSources.images.src, {cwd: oSources.cwd})
+            .pipe(imagemin())
+            .pipe(gulp.dest(PATH_DEPLOIEMENT + oSources.images.dist))
             .on('end', function () {
-                console.log('task images end');
+                //console.log('task images end');
             })
             .on('error', function () {
-                console.log('task images error');
+                //console.log('task images error');
             });
     } else {
         return false;
@@ -212,7 +209,7 @@ gulp.task('default', function () {
 
 });
 
-gulp.task('prepare-deploiement', ['css-sass', 'css-minify', 'json-minify', 'html-minify', 'php-minify','copy-files', 'inject']);
+gulp.task('prepare-deploiement', ['css-sass', 'css-minify', 'json-minify', 'html-minify', 'php-minify','images','copy-files', 'inject']);
 
 gulp.task('deploy', function () {
 
