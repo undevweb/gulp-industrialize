@@ -24,7 +24,8 @@ var gulp = require('gulp'),
     jsonminify = require('gulp-jsonminify'),
     imagemin = require('gulp-imagemin')
     phpMinify = require('@aquafadas/gulp-php-minify'),
-    rsync = require('gulp-rsync');
+    rsync = require('gulp-rsync'),
+    zip = require('gulp-zip');
 
 
 oSources = require('./config/sources.json');
@@ -194,6 +195,21 @@ gulp.task('inject', ['copy-index', 'css-sass', 'js-minify'], function () {
 /////////////////////////////
 
 
+/////////////////////////////
+// Micro tasks for backup
+/////////////////////////////
+
+gulp.task('zip', function () {
+    
+    var now = new Date();
+    var annee   = now.getFullYear();
+    var mois    = (now.getMonth() + 1 < 10) ? '0' + now.getMonth() + 1 : now.getMonth() + 1 ;
+    var jour    = (now.getDate() + 1 < 10) ? '0' + now.getDate() + 1 : now.getDate() + 1 ;
+    
+    return gulp.src(PATH_DEPLOIEMENT + '/**/*')
+        .pipe(zip(annee +  '_'+ mois + '_' + jour + '.zip'))
+        .pipe(gulp.dest(PATH_DEPLOIEMENT + '/..' + '/backup'));
+});
 
 /////////////////////////////
 // Macro tasks
