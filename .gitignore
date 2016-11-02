@@ -1,4 +1,4 @@
 node_modules/**
-gulp/config/**
-gulp/deploiement/**
+config/**
+deploiement/**
 npm-debug.log
