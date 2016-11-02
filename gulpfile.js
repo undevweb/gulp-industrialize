@@ -204,7 +204,7 @@ gulp.task('zip', function () {
     var now = new Date();
     var annee   = now.getFullYear();
     var mois    = (now.getMonth() + 1 < 10) ? '0' + now.getMonth() + 1 : now.getMonth() + 1 ;
-    var jour    = (now.getDate() + 1 < 10) ? '0' + now.getDate() + 1 : now.getDate() + 1 ;
+    var jour    = (now.getDate() < 10) ? '0' + now.getDate() : now.getDate();
     
     return gulp.src(PATH_DEPLOIEMENT + '/**/*')
         .pipe(zip(annee +  '_'+ mois + '_' + jour + '.zip'))
