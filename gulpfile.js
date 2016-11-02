@@ -31,7 +31,7 @@ oSources = require('./gulp/config/sources.json');
 oDeploy = require('./gulp/config/deploy.json');
 oProject = require('./gulp/config/project.json');
 PATH_INDEX = 'gulp/src/index.html.dist';
-PATH_DEPLOIEMENT = 'gulp/deploiement/';
+PATH_DEPLOIEMENT = oSources.deploiement || 'gulp/deploiement/';
 
 
 /////////////////////////////
@@ -41,7 +41,7 @@ PATH_DEPLOIEMENT = 'gulp/deploiement/';
 //CLEAN : clean the folder deploiement
 gulp.task('clean', function () {
     return gulp.src(PATH_DEPLOIEMENT, {read: false})
-        .pipe(clean());
+        .pipe(clean({force: true}));
 });
 
 //CSS,  Run sass to create the file ./deploiement/style.min.css and minify css from sources.json
@@ -62,7 +62,7 @@ gulp.task('css-sass', ['clean'], function () {
 
 gulp.task('css-minify', ['clean'], function () {
     if (oSources.css.active) {
-        return gulp.src(oSources.css.src, {cwd: oSources.cwd})
+        return gulp.src(oSources.css.src, { cwd: oSources.cwd})
             .pipe(cleanCSS({compatibility: 'ie8'}))
             .pipe(gulp.dest(PATH_DEPLOIEMENT));
     } else {
@@ -85,7 +85,7 @@ gulp.task('json-minify', ['clean'], function () {
 //HTML : minify html files from ./config/sources.json and put the result in ./deploiement  with the same tree
 gulp.task('html-minify', ['clean'], function () {
     if (oSources.html.active) {
-        return gulp.src(oSources.html.src, {base: '.', cwd: oSources.cwd})
+        return gulp.src(oSources.html.src, {cwd: oSources.cwd})
             .pipe(removeHtmlComments())
             .pipe(htmlmin({collapseWhitespace: true}))
             .pipe(gulp.dest(PATH_DEPLOIEMENT));
@@ -134,9 +134,9 @@ gulp.task('images', function () {
 //PHP : minify php
 gulp.task('php-minify', ['clean'], function () {
     if (oSources.php.active) {
-        gulp.src(oSources.php.src, {read: false})
+        gulp.src(oSources.php.src, {read: true, cwd : oSources.cwd})
             .pipe(phpMinify({silent: true, binary: oSources.php.exe}))
-            .pipe(gulp.dest(PATH_DEPLOIEMENT));
+            .pipe(gulp.dest(oSources.deploiement));
     } else {
         return false;
     }
@@ -146,9 +146,26 @@ gulp.task('php-minify', ['clean'], function () {
 
 //COPY-INDEX : Create the deploiement/index.html and inject dependances of local css, js and external librairies
 gulp.task('copy-index', ['clean'], function () {
-    gulp.src(PATH_INDEX)
+	if(oSources.index.active){
+		gulp.src(PATH_INDEX)
         .pipe(rename({basename: 'index', extname: ".html"}))
         .pipe(gulp.dest(PATH_DEPLOIEMENT));
+	}else{
+		return false;
+	}
+    
+
+});
+
+//COPY-FILES : copy files into the deploiement folder without modify them
+gulp.task('copy-files', ['clean'], function () {
+	if(oSources.copy.active){
+		gulp.src(oSources.copy.src, {cwd : oSources.cwd})
+        .pipe(gulp.dest(PATH_DEPLOIEMENT));
+	}else{
+		return false;
+	}
+    
 
 });
 
@@ -195,7 +212,7 @@ gulp.task('default', function () {
 
 });
 
-gulp.task('prepare-deploiement', ['css-sass', 'css-minify', 'json-minify', 'html-minify', 'php-minify', 'inject']);
+gulp.task('prepare-deploiement', ['css-sass', 'css-minify', 'json-minify', 'html-minify', 'php-minify','copy-files', 'inject']);
 
 gulp.task('deploy', function () {
 
