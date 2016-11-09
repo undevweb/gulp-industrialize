@@ -2,3 +2,4 @@ node_modules/**
 config/**
 deploiement/**
 npm-debug.log
+/config

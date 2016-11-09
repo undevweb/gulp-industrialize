@@ -179,8 +179,8 @@ gulp.task('inject', ['copy-index', 'css-sass', 'js-minify'], function () {
     for (sSource in oSources.dist.css) {
         sExterneCSS += '     <style  rel="stylesheet" href="' + oSources.dist.css[sSource] + '"></style>' + '\n';
     }
-
-    gulp.src(PATH_DEPLOIEMENT + 'index.html')
+    
+    gulp.src('index.html',{cwd : PATH_DEPLOIEMENT})
         .pipe(injectString.replace('##title##', oProject.title))
         .pipe(injectString.replace('##appName##', oProject.appName))
         .pipe(injectString.replace('##description##', oProject.description))
@@ -236,17 +236,17 @@ gulp.task('deploy', function () {
         "emptyDirectories": true,
         "recursive": true,
         "clean": true,
-        "chmod": "ugo=rwX",
-        "root": __dirname + '/' + PATH_DEPLOIEMENT
+        "silent" : true,
+        "chmod": "ugo=rwX"
     };
 
-    oConfigConnexion = require('./gulp/config/deploy.json')[argv.env];
+    oConfigConnexion = require('./config/deploy.json')[argv.env];
 
     if (oConfigConnexion == undefined) {
         gutil.log(gutil.colors.bgRed.white('Config connexion undefined'));
         return false;
     } else {
-        return gulp.src(PATH_DEPLOIEMENT + '**/*')
+        return gulp.src('**/*',{cwd : PATH_DEPLOIEMENT})
             .pipe(gulpif((argv.production || (argv.env && argv.env == 'production')),
                 prompt.confirm({
                     message: 'Are you sure to push in production ?',
