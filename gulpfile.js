@@ -2,6 +2,7 @@
 // Gulp and gulp plugins
 /////////////////////////////
 var gulp = require('gulp'),
+    debug = require('gulp-debug')
     gutil = require('gulp-util'),
     extend = require('extend'),
     argv = require('minimist')(process.argv),
@@ -25,13 +26,14 @@ var gulp = require('gulp'),
     imagemin = require('gulp-imagemin')
     phpMinify = require('@aquafadas/gulp-php-minify'),
     rsync = require('gulp-rsync'),
-    zip = require('gulp-zip');
+    zip = require('gulp-zip')
+    bower = require('gulp-bower');
 
-
-oSources = require('./config/sources.json');
+sPathSources = (argv.source != undefined) ? './config/'+ argv.source : './config/sources.json';
+oSources = require(sPathSources);
 oDeploy = require('./config/deploy.json');
 oProject = require('./config/project.json');
-PATH_INDEX = './src/index.html.dist';
+PATH_INDEX = oSources.index.src || './src/index.html.dist';
 PATH_DEPLOIEMENT = oSources.deploiement || 'gulp/deploiement/';
 
 
@@ -48,24 +50,26 @@ gulp.task('clean', function () {
 //CSS,  Run sass to create the file ./deploiement/style.min.css and minify css from sources.json
 gulp.task('css-sass', ['clean'], function () {
     if (oSources.sass.active) {
-        return gulp.src(oSources.cwd + oSources.sass.src)
-            .pipe(sourcemaps.init())
-            .pipe(sass({outputStyle: 'compressed'})
-                .on('error', sass.logError))
-            .pipe(sourcemaps.write())
-            .pipe(gp_concat(oSources.sass.dist))
-            .pipe(gulp.dest(PATH_DEPLOIEMENT));
+        for (oTheme in oSources.sass.themes) {
+            gulp.src(oSources.sass.themes[oTheme].src, { cwd: oSources.cwd})
+                .pipe(sourcemaps.init())
+                .pipe(sass({outputStyle: 'compressed'})
+                    .on('error', sass.logError))
+                .pipe(sourcemaps.write())
+                .pipe(gp_concat(oSources.sass.themes[oTheme].distFileName))
+                .pipe(gulp.dest(PATH_DEPLOIEMENT+oSources.sass.themes[oTheme].dist));
+        }
     } else {
         return false;
     }
-
 });
 
 gulp.task('css-minify', ['clean'], function () {
     if (oSources.css.active) {
         return gulp.src(oSources.css.src, { cwd: oSources.cwd})
             .pipe(cleanCSS({compatibility: 'ie8'}))
-            .pipe(gulp.dest(PATH_DEPLOIEMENT));
+            .pipe(gp_concat(oSources.css.distFileName))
+            .pipe(gulp.dest(PATH_DEPLOIEMENT+oSources.css.dist));
     } else {
         return false;
     }
@@ -89,7 +93,7 @@ gulp.task('html-minify', ['clean'], function () {
         return gulp.src(oSources.html.src, {cwd: oSources.cwd})
             .pipe(removeHtmlComments())
             .pipe(htmlmin({collapseWhitespace: true}))
-            .pipe(gulp.dest(PATH_DEPLOIEMENT));
+            .pipe(gulp.dest(PATH_DEPLOIEMENT+oSources.html.dist));
     } else {
         return false;
     }
@@ -108,12 +112,10 @@ gulp.task('js-minify', ['clean'], function () {
     } else {
         return false;
     }
-
-
 });
 
 //PICTURES : copy pictures from config/sources.json in deploiement
-gulp.task('images', function () {
+gulp.task('images', ['clean'], function () {
     if (oSources.images.active) {
         gulp.src(oSources.images.src, {cwd: oSources.cwd})
             .pipe(imagemin())
@@ -141,34 +143,35 @@ gulp.task('php-minify', ['clean'], function () {
 });
 
 
+//COPY-FILES : copy files into the deploiement folder without modify them
+gulp.task('copy-files', ['clean'], function () {
+	if(oSources.copy.active){
+
+        for (oRepos in oSources.copy.repos) {
+            
+            gulp.src(oSources.copy.repos[oRepos].src, {cwd : oSources.cwd})
+                .pipe(gulp.dest(PATH_DEPLOIEMENT + oSources.copy.repos[oRepos].dist));
+        }
+		
+
+	}else{
+		return false;
+	}
+    });
 
 //COPY-INDEX : Create the deploiement/index.html and inject dependances of local css, js and external librairies
 gulp.task('copy-index', ['clean'], function () {
 	if(oSources.index.active){
-		gulp.src(PATH_INDEX)
+        console.log(oSources.index.src);
+        gulp.src(oSources.index.src, {cwd: oSources.cwd})
         .pipe(rename({basename: 'index', extname: ".html"}))
-        .pipe(gulp.dest(PATH_DEPLOIEMENT));
+        .pipe(gulp.dest(PATH_DEPLOIEMENT+oSources.index.dist));
 	}else{
 		return false;
 	}
-    
-
 });
 
-//COPY-FILES : copy files into the deploiement folder without modify them
-gulp.task('copy-files', ['clean'], function () {
-	if(oSources.copy.active){
-		gulp.src(oSources.copy.src, {cwd : oSources.cwd})
-        .pipe(gulp.dest(PATH_DEPLOIEMENT));
-	}else{
-		return false;
-	}
-    
-
-});
-
-
-gulp.task('inject', ['copy-index', 'css-sass', 'js-minify'], function () {
+gulp.task('inject',['copy-index', 'copy-files','css-sass', 'js-minify'],  function () {
 
     sExterneJs = '\n';
     for (sSource in oSources.dist.js) {
@@ -179,15 +182,20 @@ gulp.task('inject', ['copy-index', 'css-sass', 'js-minify'], function () {
     for (sSource in oSources.dist.css) {
         sExterneCSS += '     <style  rel="stylesheet" href="' + oSources.dist.css[sSource] + '"></style>' + '\n';
     }
-    
-    gulp.src('index.html',{cwd : PATH_DEPLOIEMENT})
+
+    gulp.src(PATH_DEPLOIEMENT + oSources.index.dist + "\\" +oSources.index.distFileName)
         .pipe(injectString.replace('##title##', oProject.title))
         .pipe(injectString.replace('##appName##', oProject.appName))
         .pipe(injectString.replace('##description##', oProject.description))
         .pipe(injectString.replace('##dist-js##', sExterneJs))
         .pipe(injectString.replace('##dist-css##', sExterneCSS))
-        .pipe(inject(gulp.src(['**/*.js', '**/*.css'], {read: false, cwd: PATH_DEPLOIEMENT}), {relative: true}))
-        .pipe(gulp.dest(PATH_DEPLOIEMENT));
+        .pipe(inject(gulp.src(oSources.inject.src, {read: false, cwd: PATH_DEPLOIEMENT}), {relative: true}))
+        .pipe(gulp.dest(PATH_DEPLOIEMENT+oSources.index.dist));
+});
+
+//Bower : launch bower after json-minify
+gulp.task('bower',['clean','json-minify'],  function () {
+     //return bower({ cwd: PATH_DEPLOIEMENT });
 });
 
 /////////////////////////////
@@ -220,12 +228,12 @@ gulp.task('default', function () {
 
     gutil.log(styleMenu('Bienvenue !!!^^!!!'));
     gutil.log(styleMenu('Commencez par préparer le déploiement, puis déployez sur votre serveur :'));
-    gutil.log(styleMenu('1) gulp prepare-deploiement'));
+    gutil.log(styleMenu('1) gulp prepare-deploiement --source="sources-****.json"'));
     gutil.log(styleMenu('2) gulp deploy --env xxx'));
 
 });
 
-gulp.task('prepare-deploiement', ['css-sass', 'css-minify', 'json-minify', 'html-minify', 'php-minify','images','copy-files', 'inject']);
+gulp.task('prepare-deploiement', ['css-sass', 'css-minify', 'json-minify', 'html-minify', 'php-minify','images','copy-files', 'inject','bower']);
 
 gulp.task('deploy', function () {
 
@@ -236,17 +244,17 @@ gulp.task('deploy', function () {
         "emptyDirectories": true,
         "recursive": true,
         "clean": true,
-        "silent" : true,
-        "chmod": "ugo=rwX"
+        "chmod": "ugo=rwX"//,
+        //"root": __dirname + '/' + PATH_DEPLOIEMENT
     };
 
     oConfigConnexion = require('./config/deploy.json')[argv.env];
-
+   
     if (oConfigConnexion == undefined) {
         gutil.log(gutil.colors.bgRed.white('Config connexion undefined'));
         return false;
     } else {
-        return gulp.src('**/*',{cwd : PATH_DEPLOIEMENT})
+        return gulp.src(PATH_DEPLOIEMENT + '/**/*')
             .pipe(gulpif((argv.production || (argv.env && argv.env == 'production')),
                 prompt.confirm({
                     message: 'Are you sure to push in production ?',

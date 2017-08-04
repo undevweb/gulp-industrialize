@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="##appName##" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="##appName##" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="##appName##" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="##appName##" class="no-js"> <!--<![endif]-->
+<html>
+<head>
+     <title>##title##</title>
+     <meta name="description" content="##description##">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <!-- inject:css -->
+     <!-- endinject -->
+     ##dist-css##
+     ##dist-js##
+  
+</head>
+<body>
+     <!--[if lt IE 7]>
+          <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+     <![endif]-->
+     <div class="wrap">
+          <div ui-view></div>
+     </div>
+     <!-- inject:js -->
+     <!-- endinject -->
+</body>
+</html>
