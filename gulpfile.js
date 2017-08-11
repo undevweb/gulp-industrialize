@@ -2,7 +2,6 @@
 // Gulp and gulp plugins
 /////////////////////////////
 var gulp = require('gulp'),
-    debug = require('gulp-debug')
     gutil = require('gulp-util'),
     extend = require('extend'),
     argv = require('minimist')(process.argv),
@@ -106,7 +105,7 @@ gulp.task('js-minify', ['clean'], function () {
             .pipe(jshint())
             .pipe(gp_concat(oSources.js.dist))
             .pipe(ngAnnotate())
-            .pipe(uglify())
+            //.pipe(uglify())
             .pipe(rename({suffix: '.min'}))
             .pipe(gulp.dest(PATH_DEPLOIEMENT));
     } else {
