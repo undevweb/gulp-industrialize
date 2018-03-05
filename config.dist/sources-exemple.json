@@ -1,0 +1,136 @@
+{
+    "basepath": "C:\\path\\of\your\\project",
+    "cwd": "C:\\path\\of\your\\project",
+    "deploiement": "C:\\path\\of\your\\deploiement\\folder",
+
+    "sass": {
+        "active": true,
+        "themes": [
+            {
+                "src": "css\\scss\\themes\\default.scss",
+                "distFolder": "\\css",
+                "distFile": "style-default.min.css"
+            },
+            {
+                "src": "css\\scss\\themes\\autretheme.scss",
+                "distFolder": "\\css",
+                "distFile": "style-autretheme.min.css"
+            }
+        ]
+    },
+
+    "css": {
+        "active": true,
+        "src": [
+            "style.css"
+        ],
+        "distFileName" : "style.css"
+    },
+
+    "javascript": {
+        "active": true,
+        "repos": [{
+            "src": [
+                "bower_components/path/of/component.min.js",
+                "modules\\**\\*.js"
+
+            ],
+            "distFolder": "",
+            "distFile": "script.js"
+        }]
+    },
+
+    "index": {
+        "active": true,
+        "origine" : {
+            "folder" : "\\",
+            "file" : "index.html.dist"
+        },
+        "destination" : {
+            "folder" : "\\",
+            "file" : "index.html"
+        },
+        "inject" : {
+            "textReplace" : [
+                {
+                    "tag" : "##title##",
+                    "text" : ""
+                },
+                {
+                    "tag" : "##description##",
+                    "text" : ""
+                }
+            ],
+            "javascript" : {
+                "local" : [
+                    "*.js",
+                    "**/*.js"
+                ],
+                "dist" : [
+                    "https://cdn.url/component.min.js"
+                ]
+            },
+            "css" : {
+                "local" : [
+
+                ],
+                "dist" : [
+                ]
+            }
+        }
+    },
+
+    "html": {
+        "active": true,
+        "src": [
+            "modules\\**\\*.html"
+        ],
+        "dist": "\\modules"
+    },
+
+    "json": {
+        "active": true,
+        "src": [
+            "!bower_components/**/*",
+            "!node_modules/**/*",
+            "!package.json",
+            "!bower.json",
+            "**/*.json"
+        ]
+    },
+
+    "images": {
+        "active": true,
+        "src": [
+            "images/**/*.png",
+            "images/**/*.jpg",
+            "images/**/*.jpeg",
+            "images/**/*.gif",
+            "images/**/*.bmp"
+        ],
+        "dist": "\\images"
+    },
+
+    "copy": {
+        "active": true,
+        "repos": [
+            {
+                "src": [
+                    "C:\\path\\of\\repo\\you\\want\\copy\\**\\*"
+                ],
+                "dist": [
+                    ""
+                ]
+            },
+            {
+                "src": [
+                    "fileyouwantcopy"
+                ],
+                "dist": [
+                    "\\path\\where\\you\\want\\copy"
+                ]
+            }
+        ]
+    }
+
+}
